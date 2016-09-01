@@ -19,18 +19,67 @@ def roll_dice(num_rolls, dice=six_sided):
     assert type(num_rolls) == int, 'num_rolls must be an integer.'
     assert num_rolls > 0, 'Must roll at least once.'
     # BEGIN PROBLEM 1
-    "*** REPLACE THIS LINE ***"
+    sum = 0
+    count = 0
+    pig_sum = 0
+    pig_out = False
+    while count < num_rolls:
+        i = dice()
+        if i == 1:
+            pig_out = True 
+            pig_sum += 1
+        sum += i
+        count += 1
+    if pig_out == True:
+        return pig_sum
+    else :
+        return sum
     # END PROBLEM 1
 
 
 def free_bacon(opponent_score):
     """Return the points scored from rolling 0 dice (Free Bacon)."""
     # BEGIN PROBLEM 2
-    "*** REPLACE THIS LINE ***"
+    roll_dice(0, dice)
+    first_digit = 0
+    second_digit = 0
+    if opponent_score < 10:
+        second_digit = opponent_score
+    else:
+        first_digit = opponent_score // 10
+        second_digit = opponent_score % 10
+    opponent_score = 1 + max(first_digit, second_digit)
+    return opponent_score
     # END PROBLEM 2
 
 
 # Write your prime functions here!
+def is_prime(opponent_score):
+    """Check to see if if the opponent's score is prime.
+    Returns True if it is prime, or False if it is not.
+    >>> is_prime(0)
+    False
+    >>> is_prime(1)
+    False
+    >>> is_prime(11)
+    True
+    >>> is_prime(41)
+    True
+    """
+    i = 2
+    if opponent_score < 2:
+        return False
+    else:
+        while i < opponent_score:
+            if n % i == 0:
+                return False
+            i += 1 
+    return True
+
+def next_prime(isprime, opponent_score):
+    if prime == True:
+
+
 
 
 def take_turn(num_rolls, opponent_score, dice=six_sided):
@@ -48,7 +97,8 @@ def take_turn(num_rolls, opponent_score, dice=six_sided):
     assert num_rolls <= 10, 'Cannot roll more than 10 dice.'
     assert opponent_score < 100, 'The game should be over.'
     # BEGIN PROBLEM 2
-    "*** REPLACE THIS LINE ***"
+    opponent_score = opponent_score + roll_dice(num_rolls, dice)
+    opponent_score = free_bacon(opponent_score)
     # END PROBLEM 2
 
 
