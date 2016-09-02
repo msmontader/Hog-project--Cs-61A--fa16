@@ -39,7 +39,16 @@ def roll_dice(num_rolls, dice=six_sided):
 
 def free_bacon(opponent_score):
     """Return the points scored from rolling 0 dice (Free Bacon)."""
-    # BEGIN PROBLEM 2
+    """Check to see if if the opponent's score is prime.
+    Returns True if it is prime, or False if it is not.
+    >>> free_bacon(42)
+    5
+    >>> free_bacon(48)
+    9
+    >>> free_bacon(7)
+    8
+    """
+    
     i = opponent_score
     n = i // 10
     k = i % 10
