@@ -83,10 +83,13 @@ def take_turn(num_rolls, opponent_score, dice=six_sided):
 def reroll(dice):
     """Return dice that return even outcomes and reroll odd outcomes of DICE."""
     def rerolled():
-        # BEGIN PROBLEM 3
-        "*** REPLACE THIS LINE ***"
-        return dice()  # Replace this statement
-        # END PROBLEM 3
+        outcome = dice()
+        if outcome % 2 == 0:
+            return outcome
+        else:
+            outcome = dice()
+        return outcome
+        
     return rerolled
 
 
