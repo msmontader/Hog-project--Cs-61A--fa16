@@ -181,7 +181,7 @@ def play(strategy0, strategy1, score0=0, score1=0, goal=GOAL_SCORE):
     dice_swapped = False  # Whether 4-sided dice have been swapped for 6-sided
     # BEGIN PROBLEM 5
     def swine_swap(current, opponent):
-        if current == opponent**2:
+        if opponent == current * 2 or current == opponent * 2:
             current, opponent = opponent, current
             return current, opponent
     while score0 < goal and score1 < goal:
