@@ -59,7 +59,40 @@ def free_bacon(opponent_score):
 
 
 # Write your prime functions here!
+def prime(score):
+    """Check to see if if the score for the turn is prime.
+    
+    >>> prime(0)
+    False
+    >>> prime(1)
+    False
+    >>> prime(11)
+    True
+    >>> prime(41)
+    True
+    """
+    #Checks if the score for the turn is prime.
+    i = 2
+    if score < 2:
+        return score
+    else:
+        while i < score:
+            if score % i == 0:
+                return score
+            i += 1
+        #Finds the next prime number and makes it the score.
+        score += 1
+        i = 2
+        while i < score:
+            if score % i == 0:
+                score += 1
+                i = 2
+            i += 1
+    return score
 
+def when_pigs_fly(score):
+    score = 25 - num_rolls
+    return score
 
 def take_turn(num_rolls, opponent_score, dice=six_sided):
     """Simulate a turn rolling NUM_ROLLS dice, which may be 0 (Free Bacon).
