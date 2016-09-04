@@ -59,20 +59,20 @@ def free_bacon(opponent_score):
 
 
 # Write your prime functions here!
-def prime(score):
-    """Check to see if if the score for the turn is prime.
-    
-    >>> prime(0)
+def is_prime(opponent_score):
+    """Check to see if if the opponent's score is prime
+    Returns True if it is prime, or False if it is not
+    >>> is_prime(0)
     False
-    >>> prime(1)
+    >>> is_prime(1)
     False
-    >>> prime(11)
+    >>> is_prime(11)
     True
-    >>> prime(41)
+    >>> is_prime(41)
     True
     """
-    #Checks if the score for the turn is prime.
     i = 2
+    score = opponent_score
     if score < 2:
         return score
     else:
@@ -89,10 +89,11 @@ def prime(score):
                 i = 2
             i += 1
     return score
-
-def when_pigs_fly(score):
+def when_pigs_fly(score, num_rolls):
     score = 25 - num_rolls
     return score
+
+
 
 def take_turn(num_rolls, opponent_score, dice=six_sided):
     """Simulate a turn rolling NUM_ROLLS dice, which may be 0 (Free Bacon).
@@ -112,14 +113,14 @@ def take_turn(num_rolls, opponent_score, dice=six_sided):
     turn_score = 0
     if num_rolls == 0:
         turn_score = free_bacon(opponent_score)
-        turn_score = prime(turn_score)
-        if turn_score > 25:
-            opponent_score = opponent_score + when_pigs_fly(turn_score)
+        turn_score = is_prime(turn_score)
+
     else:
         turn_score = roll_dice(num_rolls, dice)
-        turn_score = prime(turn_score)
-        if turn_score > 25:
-            opponent_score = opponent_score + when_pigs_fly(turn_score)
+        turn_score = is_prime(turn_score)
+        if turn_score > 25 - num_rolls:
+            turn_score = when_pigs_fly(turn_score, num_rolls)
+    return turn_score
     # END PROBLEM 2
 
 
