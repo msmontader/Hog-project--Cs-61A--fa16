@@ -177,18 +177,14 @@ def play(strategy0, strategy1, score0=0, score1=0, goal=GOAL_SCORE):
     score0   :  The starting score for Player 0
     score1   :  The starting score for Player 1
     """
-       player = 0  # Which player is about to take a turn, 0 (first) or 1 (second)
+    player = 0  # Which player is about to take a turn, 0 (first) or 1 (second)
     dice_swapped = False  # Whether 4-sided dice have been swapped for 6-sided
     # BEGIN PROBLEM 5
-    def swine_swap(score0, score1):
-        if score0 == score1**2:
-            score0, score1 = score1, score0
-            return score0, score1
-        if score1 == score0**2:
-            score1, score0 = score0, score1
-            return score0, score1
-
-    while score0 < 100 and score1 < 100:
+    def swine_swap(current, opponent):
+        if current == opponent**2:
+            current, opponent = opponent, current
+            return current, opponent
+    while score0 < goal and score1 < goal:
         if player == 0:
             number_rolls = strategy0(score0, score1)
             if number_rolls == -1:
@@ -198,7 +194,8 @@ def play(strategy0, strategy1, score0=0, score1=0, goal=GOAL_SCORE):
             else:
                 dice = select_dice(score0, score1, dice_swapped)
                 score0 += take_turn(number_rolls, score1, dice)
-        else:
+            swine_swap(score0, score1)
+        if player == 1:
             number_rolls = strategy1(score0, score1)
             if number_rolls == -1:
                 dice_swapped = not dice_swapped
@@ -207,12 +204,8 @@ def play(strategy0, strategy1, score0=0, score1=0, goal=GOAL_SCORE):
             else:
                 dice = select_dice(score1, score0, dice_swapped)
                 score1 += take_turn(number_rolls, score0, dice)
-        swine_swap(score0, score1)
+            swine_swap(score1, score0)
         player = other(player)
-
-        
-        
-    # END PROBLEM 5
     return score0, score1
 
 
