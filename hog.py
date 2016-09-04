@@ -54,30 +54,40 @@ def free_bacon(opponent_score):
 
 
 # Write your prime functions here!
-def is_prime(opponent_score):
-    """Check to see if if the opponent's score is prime.
-    Returns True if it is prime, or False if it is not.
-    >>> is_prime(0)
+def prime(score):
+    """Check to see if if the score for the turn is prime.
+    
+    >>> prime(0)
     False
-    >>> is_prime(1)
+    >>> prime(1)
     False
-    >>> is_prime(11)
+    >>> prime(11)
     True
-    >>> is_prime(41)
+    >>> prime(41)
     True
     """
+    #Checks if the score for the turn is prime.
     i = 2
-    if opponent_score < 2:
-        return False
+    if score < 2:
+        return score
     else:
-        while i < opponent_score:
-            if n % i == 0:
-                return False
-            i += 1 
-    return True
+        while i < score:
+            if score % i == 0:
+                return score
+            i += 1
+        #Finds the next prime number and makes it the score.
+        score += 1
+        i = 2
+        while i < score:
+            if score % i == 0:
+                score += 1
+                i = 2
+            i += 1
+    return score
 
-def next_prime(isprime, opponent_score):
-    if prime == True:
+def when_pigs_fly(score):
+    score = 25 - num_rolls
+    return score
 
 
 
