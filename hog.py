@@ -10,7 +10,7 @@ GOAL_SCORE = 100  # The goal of Hog is to score 100 points.
 # Phase 1: Simulator #
 ######################
 
-def roll_dice(num_rolls, dice=six_sided):
+def roll_dice(num_rolls, dice):
     """Simulate rolling the DICE exactly NUM_ROLLS>0 times. Return the sum of
     the outcomes unless any of the outcomes is 1. In that case, return the
     number of 1's rolled.
@@ -19,7 +19,7 @@ def roll_dice(num_rolls, dice=six_sided):
     assert type(num_rolls) == int, 'num_rolls must be an integer.'
     assert num_rolls > 0, 'Must roll at least once.'
     # BEGIN PROBLEM 1
-  sum = 0
+    sum = 0
     count = 0
     pig_sum = 0
     pig_out = False
@@ -34,6 +34,8 @@ def roll_dice(num_rolls, dice=six_sided):
         return pig_sum
     else :
         return sum
+
+    
     # END PROBLEM 1
 
 
@@ -140,16 +142,16 @@ def reroll(dice):
 def select_dice(score, opponent_score, dice_swapped):
     """Return the dice used for a turn, which may be re-rolled (Hog Wild) and/or
     swapped for four-sided dice (Pork Chop).
-
     DICE_SWAPPED is True if and only if four-sided dice are being used.
     """
     # BEGIN PROBLEM 4
     if dice_swapped == True:
-        dice = four_sided 
+        dice = four_sided
+        return dice 
     else:
         dice = six_sided
     if (score + opponent_score) % 7 == 0:
-        dice = reroll(dice)
+            dice = reroll(dice)
     return dice
 
 
@@ -162,7 +164,10 @@ def other(player):
     0
     """
     return 1 - player
-
+def swine_swap(current, opponent):
+        if opponent == (current * 2) or current == (opponent * 2):
+            current, opponent = opponent, current
+        return current, opponent
 
 def play(strategy0, strategy1, score0=0, score1=0, goal=GOAL_SCORE):
     """Simulate a game and return the final scores of both players, with
@@ -180,10 +185,6 @@ def play(strategy0, strategy1, score0=0, score1=0, goal=GOAL_SCORE):
     player = 0  # Which player is about to take a turn, 0 (first) or 1 (second)
     dice_swapped = False  # Whether 4-sided dice have been swapped for 6-sided
     # BEGIN PROBLEM 5
-    def swine_swap(current, opponent):
-        if opponent == current * 2 or current == opponent * 2:
-            current, opponent = opponent, current
-            return current, opponent
     while score0 < goal and score1 < goal:
         if player == 0:
             number_rolls = strategy0(score0, score1)
@@ -192,19 +193,17 @@ def play(strategy0, strategy1, score0=0, score1=0, goal=GOAL_SCORE):
                 dice = select_dice(score0, score1, dice_swapped)
                 score0 +=1
             else:
-                dice = select_dice(score0, score1, dice_swapped)
-                score0 += take_turn(number_rolls, score1, dice)
-            swine_swap(score0, score1)
+                score0 += take_turn(number_rolls, score1, select_dice(score0, score1, dice_swapped))
+            score0, score1 = swine_swap(score0, score1)
         if player == 1:
-            number_rolls = strategy1(score0, score1)
+            number_rolls = strategy1(score1, score0)
             if number_rolls == -1:
                 dice_swapped = not dice_swapped
                 dice = select_dice(score1, score0, dice_swapped)
                 score1 += 1
             else:
-                dice = select_dice(score1, score0, dice_swapped)
-                score1 += take_turn(number_rolls, score0, dice)
-            swine_swap(score1, score0)
+                score1 += take_turn(number_rolls, score0, select_dice(score1, score0, dice_swapped))
+            score1, score0 = swine_swap(score1, score0)
         player = other(player)
     return score0, score1
 
