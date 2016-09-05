@@ -39,35 +39,40 @@ def roll_dice(num_rolls, dice=six_sided):
 
 def free_bacon(opponent_score):
     """Return the points scored from rolling 0 dice (Free Bacon)."""
-    # BEGIN PROBLEM 2
-    roll_dice(0, dice)
-    first_digit = 0
-    second_digit = 0
-    if opponent_score < 10:
-        second_digit = opponent_score
-    else:
-        first_digit = opponent_score // 10
-        second_digit = opponent_score % 10
-    opponent_score = 1 + max(first_digit, second_digit)
-    return opponent_score
+    """Check to see if if the opponent's score is prime.
+    Returns True if it is prime, or False if it is not.
+    >>> free_bacon(42)
+    5
+    >>> free_bacon(48)
+    9
+    >>> free_bacon(7)
+    8
+    """
+    
+    i = opponent_score
+    n = i // 10
+    k = i % 10
+    if n == 0:
+        return k+1
+    return ( max(k, n) + 1)
     # END PROBLEM 2
 
 
 # Write your prime functions here!
-def prime(score):
-    """Check to see if if the score for the turn is prime.
-    
-    >>> prime(0)
+def is_prime(opponent_score):
+    """Check to see if if the opponent's score is prime
+    Returns True if it is prime, or False if it is not
+    >>> is_prime(0)
     False
-    >>> prime(1)
+    >>> is_prime(1)
     False
-    >>> prime(11)
+    >>> is_prime(11)
     True
-    >>> prime(41)
+    >>> is_prime(41)
     True
     """
-    #Checks if the score for the turn is prime.
     i = 2
+    score = opponent_score
     if score < 2:
         return score
     else:
@@ -84,11 +89,9 @@ def prime(score):
                 i = 2
             i += 1
     return score
-
-def when_pigs_fly(score):
+def when_pigs_fly(score, num_rolls):
     score = 25 - num_rolls
     return score
-
 
 
 
@@ -110,24 +113,27 @@ def take_turn(num_rolls, opponent_score, dice=six_sided):
     turn_score = 0
     if num_rolls == 0:
         turn_score = free_bacon(opponent_score)
-        turn_score = prime(turn_score)
-        if turn_score > 25:
-            opponent_score = opponent_score + when_pigs_fly(turn_score)
+        turn_score = is_prime(turn_score)
+
     else:
         turn_score = roll_dice(num_rolls, dice)
-        turn_score = prime(turn_score)
-        if turn_score > 25:
-            opponent_score = opponent_score + when_pigs_fly(turn_score)
+        turn_score = is_prime(turn_score)
+        if turn_score > 25 - num_rolls:
+            turn_score = when_pigs_fly(turn_score, num_rolls)
+    return turn_score
     # END PROBLEM 2
 
 
 def reroll(dice):
     """Return dice that return even outcomes and reroll odd outcomes of DICE."""
     def rerolled():
-        # BEGIN PROBLEM 3
-        "*** REPLACE THIS LINE ***"
-        return dice()  # Replace this statement
-        # END PROBLEM 3
+        outcome = dice()
+        if outcome % 2 == 0:
+            return outcome
+        else:
+            outcome = dice()
+        return outcome
+        
     return rerolled
 
 
@@ -138,9 +144,10 @@ def select_dice(score, opponent_score, dice_swapped):
     DICE_SWAPPED is True if and only if four-sided dice are being used.
     """
     # BEGIN PROBLEM 4
-    "*** REPLACE THIS LINE ***"
-    dice = six_sided  # Replace this statement
-    # END PROBLEM 4
+    if dice_swapped == True:
+        dice = four_sided 
+    else:
+        dice = six_sided
     if (score + opponent_score) % 7 == 0:
         dice = reroll(dice)
     return dice
@@ -155,6 +162,11 @@ def other(player):
     0
     """
     return 1 - player
+
+def swine_swap(current, opponent):
+    if opponent == current * 2 or current == opponent * 2:
+        current, opponent = opponent, current
+    return current, opponent
 
 
 def play(strategy0, strategy1, score0=0, score1=0, goal=GOAL_SCORE):
@@ -173,8 +185,29 @@ def play(strategy0, strategy1, score0=0, score1=0, goal=GOAL_SCORE):
     player = 0  # Which player is about to take a turn, 0 (first) or 1 (second)
     dice_swapped = False  # Whether 4-sided dice have been swapped for 6-sided
     # BEGIN PROBLEM 5
-    "*** REPLACE THIS LINE ***"
-    # END PROBLEM 5
+
+    while score0 < goal and score1 < goal:
+        if player == 0:
+            number_rolls = strategy0(score0, score1)
+            if number_rolls == -1:
+                dice_swapped = not dice_swapped
+                dice = select_dice(score0, score1, dice_swapped)
+                score0 +=1
+            else:
+                dice = select_dice(score0, score1, dice_swapped)
+                score0 += take_turn(number_rolls, score1, dice)
+            score0, score1 = swine_swap(score0, score1)
+        if player == 1:
+            number_rolls = strategy1(score1, score0)
+            if number_rolls == -1:
+                dice_swapped = not dice_swapped
+                dice = select_dice(score0, score1, dice_swapped)
+                score1 += 1
+            else:
+                dice = select_dice(score1, score0, dice_swapped)
+                score1 += take_turn(number_rolls, score0, dice)
+            score1, score0 = swine_swap(score1, score0)
+        player = other(player)
     return score0, score1
 
 
