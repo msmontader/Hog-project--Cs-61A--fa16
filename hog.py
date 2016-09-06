@@ -89,6 +89,7 @@ def is_prime(opponent_score):
                 i = 2
             i += 1
     return score
+
 def when_pigs_fly(score, num_rolls):
     score = 25 - num_rolls
     return score
@@ -284,7 +285,8 @@ def check_strategy(strategy, goal=GOAL_SCORE):
     AssertionError: strategy(102, 115) returned 100 (invalid number of rolls)
     """
     # BEGIN PROBLEM 6
-    "*** REPLACE THIS LINE ***"
+    if strategy == True:
+        return check_strategy_roll()
     # END PROBLEM 6
 
 
@@ -302,7 +304,14 @@ def make_averaged(fn, num_samples=1000):
     3.75
     """
     # BEGIN PROBLEM 7
-    "*** REPLACE THIS LINE ***"
+    def average(*args):
+        total = 0
+        i = 0
+        while i < num_samples:
+            total = total + fn(*args)
+            i += 1
+        return total / num_samples
+    return average
     # END PROBLEM 7
 
 
@@ -316,7 +325,16 @@ def max_scoring_num_rolls(dice=six_sided, num_samples=1000):
     10
     """
     # BEGIN PROBLEM 8
-    "*** REPLACE THIS LINE ***"
+    max_score = 0
+    total = 0
+    num_dice = 10
+    while num_dice > 0:
+        average = make_averaged(roll_dice)(num_dice, dice)
+        max_score = max(max_score, average)
+        if average >= max_score:
+            total = num_dice
+        num_dice -= 1
+    return total
     # END PROBLEM 8
 
 
