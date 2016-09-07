@@ -402,8 +402,14 @@ def swap_strategy(score, opponent_score, margin=8, num_rolls=4):
     NUM_ROLLS.
     """
     # BEGIN PROBLEM 10
-    "*** REPLACE THIS LINE ***"
-    return 4  # Replace this statement
+    bacon = free_bacon(opponent_score)
+    if score < opponent_score and opponent_score == score * 2:
+        return 0
+    else:
+        bacon = is_prime(bacon)
+        if bacon >= margin:
+            return 0
+        return num_rolls
     # END PROBLEM 10
 check_strategy(swap_strategy)
 
